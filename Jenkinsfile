@@ -1,14 +1,13 @@
 pipeline {
-    agent any
+    agent {
+        label 'jenkins_slave'
+    }
     tools {
-        maven 'maven-3.8.9'
+        maven 'maven-3'
     }
     stages {
-        stage('Build') {
-            steps {
-                echo "this is my spring pipeline"
-                sh "mvn --version"
-            }
-        }
+        stage ('build')
+        echo "spring petclinic"
+        sh "mvn --version"
     }
 }

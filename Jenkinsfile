@@ -6,8 +6,11 @@ pipeline {
         maven 'maven-3'
     }
     stages {
-        stage ('build')
-        echo "spring petclinic"
-        sh "mvn --version"
+        stage('build') {
+            steps {
+                echo "spring petclinic"
+                sh "mvn --version"
+            }
+        }
     }
 }

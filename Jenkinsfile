@@ -1,9 +1,7 @@
-ipeline {
-    agent {
-        label 'headche-label'
-    }
+pipeline {
+    agent any
     tools {
-        maven 'Maven-3.8.8'
+        maven 'maven-3.8.9'
     }
     stages {
         stage('Build') {

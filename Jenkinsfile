@@ -4,6 +4,12 @@ pipeline {
         GOOGLE_APPLICATION_CREDENTIALS = "/var/lib/jenkins/key.json"
     }
     stages {
+        stage('checkout') {
+            steps{
+                cleanWs()
+                sh "git clone https://github.com/spring-projects/spring-petclinic.git"
+            }
+        }
         stage('create infra') {
             steps {
                 dir("terraform"){

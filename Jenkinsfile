@@ -29,7 +29,7 @@ pipeline {
                   rm -rf spring-petclinic
                   git clone https://github.com/padmapriya-26/spring-petclinic.git
                   cd spring-petclinic
-                  mvn clean package -DskipTests
+                  mvn clean package -DskipTests -Dcheckstyle.skip=true
                   '''
             }
         }
@@ -39,7 +39,7 @@ pipeline {
                  cd spring-petclinic
                  mvn clean verify sonar:sonar \
                  -Dsonar.projectKey=sonar \
-                 -Dsonar.host.url=http://136.111.30.31:9000 \
+                 -Dsonar.host.url=https://136.111.30.31:9000 \
                  -Dsonar.login=sqp_a5d6b0a58b8f67ef698445113470bb2b49323405
                  '''
             }

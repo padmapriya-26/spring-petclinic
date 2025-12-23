@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps{
-                checkout scm
+                   git branch: 'main , url: 'https://github.com/your-org/your-repo.git'
             }
            
         }

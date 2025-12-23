@@ -6,12 +6,18 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-               checkout scm
+               cleanWs()
+               sh '''
+                 sudo apt-get update
+                 sudo apt-get install git -y
+                 '''
+                git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
             }
         }
 
         stage('create infra') {
             steps {
+                cleanWs()
                 dir('terraform') {
                     sh '''
                     terraform init
@@ -37,7 +43,10 @@ pipeline {
             steps {
                sh '''
                cd spring-petclinic
-               mvn sonar:sonar
+               mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+               -Dsonar.projectKey=spring-petclinic \
+               -Dsonar.host.url=http://<SONAR_IP>:9000 \
+               -Dsonar.login=<SONAR_TOKEN>
                '''
             }
         }

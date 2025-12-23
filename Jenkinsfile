@@ -7,12 +7,12 @@ pipeline {
         stage('checkout') {
             steps{
                 cleanWs()
-                sh "git clone https://github.com/spring-projects/spring-petclinic.git"
+                sh "git https://github.com/spring-projects/spring-petclinic.git"
             }
         }
         stage('create infra') {
             steps {
-                dir("/var/lib/jenkins/key.json"){
+                dir("terraform"){
                     sh '''
                  terraform init
                  terraform validate

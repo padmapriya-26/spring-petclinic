@@ -1,6 +1,6 @@
 provider "google" {
     project = "sinuous-voice-476704-d4"
-    region = var.vmn.region
+    region = each.value.region
 }
 resource "google_compute_instance" "vmname" {
     for_each = var.vmn

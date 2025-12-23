@@ -1,15 +1,15 @@
 provider "google" {
     project = "sinuous-voice-476704-d4"
-    region = var.region
 }
 resource "google_compute_instance" "vmname" {
     for_each = var.vmn
-    name = each.key
+    name = each.value.name
     zone = each.value.zone
     machine_type = each.value.machine_type
     boot_disk {
       initialize_params {
-        image = "debian-11"
+        image = "debian-cloud/debian-11"
+
       }
     }
     network_interface {
@@ -24,14 +24,10 @@ resource "google_compute_instance" "vmname" {
 variable "vmn" {
     type = map(object({
         name = string
-        region = string
         zone = string
         machine_type = string
         metadata_startup_script = string
     }))
     
 }
-variable "region" {
-  type = string
-  
-}
+

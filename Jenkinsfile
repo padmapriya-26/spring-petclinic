@@ -12,7 +12,7 @@ pipeline {
         }
         stage('create infra') {
             steps {
-                dir("spring-petclinic/terraform"){
+                dir("/var/lib/jenkins/key.json"){
                     sh '''
                  terraform init
                  terraform validate

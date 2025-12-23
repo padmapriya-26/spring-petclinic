@@ -2,20 +2,16 @@ pipeline {
     agent any
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = "/var/lib/jenkins/key.json"
-        SONAR_TOKEN = credentials('sonar-token-id')
     }
     stages {
         stage('Checkout Code') {
             steps {
                    cleanWs()
                    git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
-
+                }
             }
-           
-        }
         stage('create infra') {
             steps {
-                
                 dir('terraform') {
                     sh '''
                     terraform init
@@ -25,7 +21,6 @@ pipeline {
                     terraform destroy --auto-approve
                     '''
                 }
-        
             }
         }
         stage('build the artifact') {
@@ -35,8 +30,7 @@ pipeline {
                   git clone https://github.com/padmapriya-26/spring-petclinic.git
                   cd spring-petclinic
                   mvn clean package -DskipTests
-
-                '''
+                  '''
             }
         }
         stage('code quality') {
@@ -46,7 +40,7 @@ pipeline {
                  mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
                  -Dsonar.projectKey=spring-petclinic \
                  -Dsonar.host.url=http://<SONAR_IP>:9000 \
-                 -Dsonar.login=$<SONAR_TOKEN>
+                 -Dsonar.login=<SONAR_TOKEN>
                
                 '''
             }
@@ -58,6 +52,5 @@ pipeline {
                '''
             }
         }
-
     }
 }

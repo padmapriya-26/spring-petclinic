@@ -5,7 +5,7 @@ pipeline {
     }
     stages {
         stage('Checkout Code') {
-            steps{
+            steps {
                    cleanWs()
                    git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
 

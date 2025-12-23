@@ -21,6 +21,7 @@ pipeline {
                     terraform validate
                     terraform plan
                     terraform apply --auto-approve
+                    terraform destroy --auto-approve
                     '''
                 }
         
@@ -29,22 +30,24 @@ pipeline {
         stage('build the artifact') {
             steps {
                 sh '''
-                rm -rf spring-petclinic
-                git clone https://github.com/padmapriya-26/spring-petclinic.git
-                cd spring-petclinic
-                mvn clean package -DskipTests
+                  rm -rf spring-petclinic
+                  git clone https://github.com/padmapriya-26/spring-petclinic.git
+                  cd spring-petclinic
+                  mvn clean package -DskipTests
+
                 '''
             }
         }
         stage('code quality') {
             steps {
                sh '''
-               cd spring-petclinic
-               mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-               -Dsonar.projectKey=spring-petclinic \
-               -Dsonar.host.url=http://<SONAR_IP>:9000 \
-               -Dsonar.login=<SONAR_TOKEN>
-               '''
+                 cd spring-petclinic
+                 mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                 -Dsonar.projectKey=spring-petclinic \
+                 -Dsonar.host.url=http://<SONAR_IP>:9000 \
+                 -Dsonar.login=<SONAR_TOKEN>
+               
+                '''
             }
         }
         stage('upload artifact to bucket') {

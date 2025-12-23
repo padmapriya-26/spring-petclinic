@@ -37,12 +37,11 @@ pipeline {
             steps {
                sh '''
                  cd spring-petclinic
-                 mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-                 -Dsonar.projectKey=spring-petclinic \
-                 -Dsonar.host.url=http://<SONAR_IP>:9000 \
-                 -Dsonar.login=<SONAR_TOKEN>
-               
-                '''
+                 mvn clean verify sonar:sonar \
+                 -Dsonar.projectKey=sonar \
+                 -Dsonar.host.url=http://136.111.30.31:9000 \
+                 -Dsonar.login=sqp_a5d6b0a58b8f67ef698445113470bb2b49323405
+                 '''
             }
         }
         stage('upload artifact to bucket') {

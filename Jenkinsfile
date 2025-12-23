@@ -6,13 +6,14 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps{
+                   cleanWs()
                    git branch: 'main' , url: 'https://github.com/your-org/your-repo.git'
             }
            
         }
         stage('create infra') {
             steps {
-                cleanWs()
+                
                 dir('terraform') {
                     sh '''
                     terraform init

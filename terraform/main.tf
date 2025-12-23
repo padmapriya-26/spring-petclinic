@@ -1,8 +1,6 @@
-
-
 provider "google" {
     project = "sinuous-voice-476704-d4"
-    region = var.vmn.region
+    region = var.region
 }
 resource "google_compute_instance" "vmname" {
     for_each = var.vmn
@@ -32,4 +30,8 @@ variable "vmn" {
         metadata_startup_script = string
     }))
     
+}
+variable "region" {
+  type = string
+  
 }

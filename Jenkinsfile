@@ -17,7 +17,7 @@ pipeline {
 
         stage('create infra') {
             steps {
-                dir('/var/lib/jenkins/workspace/te2-usecase2') {
+                dir('spring-petclinic') {
                     sh '''
                     terraform init
                     terraform validate

@@ -4,15 +4,16 @@ pipeline {
         GOOGLE_APPLICATION_CREDENTIALS = "/var/lib/jenkins/key.json"
     }
     stages {
-        stage('checkout') {
-            steps{
-                cleanWs()
-                sh "git https://github.com/spring-projects/spring-petclinic.git"
+        stage('Checkout Code') {
+            steps {
+               cleanWs()
+               git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
             }
         }
+
         stage('create infra') {
             steps {
-                dir('terraform'){
+                dir('terraform') {
                     sh '''
                  terraform init
                  terraform validate

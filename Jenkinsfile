@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = "/var/lib/jenkins/key.json"
+        SONAR_TOKEN = credentials('sonar-token-id')
     }
     stages {
         stage('Checkout Code') {
@@ -45,7 +46,7 @@ pipeline {
                  mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
                  -Dsonar.projectKey=spring-petclinic \
                  -Dsonar.host.url=http://<SONAR_IP>:9000 \
-                 -Dsonar.login=<SONAR_TOKEN>
+                 -Dsonar.login=$<SONAR_TOKEN>
                
                 '''
             }

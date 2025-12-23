@@ -3,12 +3,12 @@ vmn = {
         name = "java-vm"
         zone = "us-east1-b"
         machine_type = "e2-small"
-        metadata_startup_script = "Scripts/java.sh"
+        metadata_startup_script = "spring-petclinic/terraform/java.sh"
     }
     docker_vm = {
         name = "docker-vm"
         zone = "us-central1-a"
         machine_type = "e2-micro"
-        metadata_startup_script = "Scripts/docker.sh"
+        metadata_startup_script = "spring-petclinic/terraform/docker.sh"
     }
 }

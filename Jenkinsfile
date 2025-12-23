@@ -6,18 +6,13 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-               cleanWs()
-               sh '''
-                 sudo apt-get update
-                 sudo apt-get install git -y
-                 '''
-                git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
+               checkout scm
             }
         }
 
         stage('create infra') {
             steps {
-                dir('spring-petclinic') {
+                dir('terraform') {
                     sh '''
                     terraform init
                     terraform validate

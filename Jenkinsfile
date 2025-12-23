@@ -12,7 +12,7 @@ pipeline {
 
         stage('create infra') {
             steps {
-                dir('spring-petclinic/terraform') {
+                dir('terraform') {
                     sh '''
                     terraform init
                     terraform validate

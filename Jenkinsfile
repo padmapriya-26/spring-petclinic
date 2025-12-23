@@ -11,14 +11,13 @@ pipeline {
                  sudo apt-get update
                  sudo apt-get install git -y
                  '''
-
-               git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
+                git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
             }
         }
 
         stage('create infra') {
             steps {
-                dir('spring-petclinic') {
+                dir('/var/lib/jenkins/workspace/te2-usecase2') {
                     sh '''
                     terraform init
                     terraform validate

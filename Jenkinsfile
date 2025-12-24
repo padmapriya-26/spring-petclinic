@@ -1,4 +1,7 @@
-pipeline {
+#  Write a pipeline that pushes the Java artifact to a bucket and builds a Docker image using the artifact retrieved from the bucket.
+    
+    
+    pipeline {
     agent {
         label "build-agent"
     }

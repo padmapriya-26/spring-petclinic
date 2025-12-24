@@ -1,55 +1,86 @@
 pipeline {
-    agent any
+
+    agent none
+
     environment {
-        GOOGLE_APPLICATION_CREDENTIALS = "/var/lib/jenkins/key.json"
+        APP_NAME = "java-app"
+        IMAGE_TAG = "v1"
+        DOCKER_IMAGE = "${APP_NAME}:${IMAGE_TAG}"
+        SONARQUBE_ENV = "sonarqube"
     }
+
     stages {
-        stage('Checkout Code') {
+
+        stage('Clone Code') {
+            agent { label 'build-agent' }
             steps {
-                   cleanWs()
-                   git branch: 'main', url: 'https://github.com/padmapriya-26/spring-petclinic.git'
-                }
+                git branch: 'main',
+                    url: 'https://github.com/padmapriya-26/spring-petclinic.git'
             }
-        stage('create infra') {
+        }
+
+        stage('Build Artifact') {
+            agent { label 'build-agent' }
             steps {
-                dir('terraform') {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Code Quality - SonarQube') {
+            agent { label 'build-agent' }
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
                     sh '''
-                    terraform init
-                    terraform validate
-                    terraform plan
-                    terraform apply --auto-approve
-                    terraform destroy --auto-approve
+                      mvn sonar:sonar \
+                      -Dsonar.projectKey=java-app \
+                      -Dsonar.projectName=java-app
                     '''
                 }
             }
         }
-        stage('build the artifact') {
+
+        stage('Archive Artifact') {
+            agent { label 'build-agent' }
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Copy Artifact to Docker VM') {
+            agent { label 'build-agent' }
             steps {
                 sh '''
-                  rm -rf spring-petclinic
-                  git clone https://github.com/padmapriya-26/spring-petclinic.git
-                  cd spring-petclinic
-                  mvn clean package -DskipTests -Dcheckstyle.skip=true
-                  '''
+                scp -o StrictHostKeyChecking=no \
+                target/*.jar sony2@34.170.135.185:/home/sony2/app.jar
+                '''
             }
         }
-        stage('code quality') {
+
+        stage('Build Docker Image') {
+            agent { label 'docker-agent' }
             steps {
-               sh '''
-                 cd spring-petclinic
-                 mvn clean verify sonar:sonar \
-                 -Dsonar.projectKey=sonar \
-                 -Dsonar.host.url=https://136.111.30.31:9000 \
-                 -Dsonar.login=sqp_a5d6b0a58b8f67ef698445113470bb2b49323405
-                 '''
+                sh '''
+                docker build -t ${DOCKER_IMAGE} .
+                '''
             }
         }
-        stage('upload artifact to bucket') {
+
+        stage('Run Docker Container') {
+            agent { label 'docker-agent' }
             steps {
-               sh '''
-               gsutil cp spring-petclinic/target/*.jar gs://java-artifact-bucket/
-               '''
+                sh '''
+                docker run -d -p 8080:8080 ${DOCKER_IMAGE}
+                '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Pipeline completed successfully"
+        }
+        failure {
+            echo "❌ Pipeline failed"
         }
     }
 }

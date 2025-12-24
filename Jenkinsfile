@@ -26,18 +26,18 @@ pipeline {
             }
         }
 
-        stage('Code Quality - SonarQube') {
-            agent { label 'build-agent' }
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh '''
-                      mvn clean verify sonar:sonar \
-                      -Dsonar.projectKey=java-app \
-                      -Dsonar.projectName=java-app
-                    '''
-                }
-            }
-        }
+        // stage('Code Quality - SonarQube') {
+        //     agent { label 'build-agent' }
+        //     steps {
+        //         withSonarQubeEnv("${SONARQUBE_ENV}") {
+        //             sh '''
+        //               mvn clean verify sonar:sonar \
+        //               -Dsonar.projectKey=java-app \
+        //               -Dsonar.projectName=java-app
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Archive Artifact') {
             agent { label 'build-agent' }

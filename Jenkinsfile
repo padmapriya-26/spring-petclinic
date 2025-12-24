@@ -4,6 +4,7 @@ pipeline {
     }
 
     environment {
+        GOOGLE_APPLICATION_CREDENTIALS = "/var/lib/jenkins/key.json"
         BUCKET_NAME = "gs://java-artifact-bucket"
         APP_NAME = "spring-petclinic"
         IMAGE_TAG = "v1"
@@ -23,6 +24,9 @@ pipeline {
 
         /* ---------------- BUILD JAR ---------------- */
         stage('Build Java Artifact') {
+            agent {
+                    label "build-agent"
+                }
             steps {
                 sh '''
                 mvn clean package -DskipTests
@@ -32,6 +36,9 @@ pipeline {
 
         /* ---------------- UPLOAD TO BUCKET ---------------- */
         stage('Upload Artifact to Bucket') {
+            agent {
+                    label "build-agent"
+                }
             steps {
                 sh '''
                 gsutil cp target/spring-petclinic-3.5.0-SNAPSHOT.jar gs://java-artifact-bucket/app.jar
@@ -42,6 +49,9 @@ pipeline {
 
         /* ---------------- DOWNLOAD FROM BUCKET ---------------- */
         stage('Download Artifact from Bucket') {
+            agent {
+                    label "build-agent"
+                }
             steps {
                 sh '''
                 rm -f app.jar
@@ -52,6 +62,9 @@ pipeline {
 
         /* ---------------- BUILD DOCKER IMAGE ---------------- */
         stage('Build Docker Image') {
+            agent {
+                    label "docker-agent"
+                }
             steps {
                 sh '''
                 docker build -t ${IMAGE_NAME} .
@@ -61,7 +74,11 @@ pipeline {
 
         /* ---------------- OPTIONAL: RUN CONTAINER ---------------- */
         stage('Run Docker Container') {
+            agent {
+                    label "docker-agent"
+                }
             steps {
+
                 sh '''
                 docker rm -f petclinic || true
                 docker run -d --name petclinic -p 8080:8080 ${IMAGE_NAME}

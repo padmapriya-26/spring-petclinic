@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     environment {
         BUCKET_NAME = "gs://java-artifact-bucket"

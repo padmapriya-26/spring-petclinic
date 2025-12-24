@@ -51,7 +51,7 @@ pipeline {
             steps {
                 sh '''
                 scp -o StrictHostKeyChecking=no \
-                target/*.jar sony2@34.170.135.185:/home/sony2/app.jar
+                target/*.jar sony@35.243.203.206:/home/sony/app.jar
                 '''
             }
         }

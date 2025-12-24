@@ -34,7 +34,8 @@ pipeline {
         stage('Upload Artifact to Bucket') {
             steps {
                 sh '''
-                gsutil cp target/*.jar ${BUCKET_NAME}/app.jar
+                gsutil cp target/spring-petclinic-3.5.0-SNAPSHOT.jar gs://java-artifact-bucket/app.jar
+
                 '''
             }
         }

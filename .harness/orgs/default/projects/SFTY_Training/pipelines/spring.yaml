@@ -44,14 +44,14 @@ pipeline:
                     tags:
                       - v1
     - stage:
-        name: deploy-gar
-        identifier: deploygar
+        name: deploy
+        identifier: deploy
         description: ""
         type: Deployment
         spec:
           deploymentType: Kubernetes
           service:
-            serviceRef: k8sclusterservice
+            serviceRef: raghubackend
             serviceInputs:
               serviceDefinition:
                 type: Kubernetes
@@ -61,28 +61,35 @@ pipeline:
                       primaryArtifactRef: <+input>
                       sources: <+input>
           environment:
-            environmentRef: dev
+            environmentRef: Dev
             deployToAll: false
             infrastructureDefinitions:
-              - identifier: infra1
+              - identifier: clusterm
           execution:
             steps:
               - step:
-                  name: Rollout Deployment
-                  identifier: rolloutDeployment
-                  type: K8sRollingDeploy
+                  name: Stage Deployment
+                  identifier: stageDeployment
+                  type: K8sBlueGreenDeploy
                   timeout: 10m
                   spec:
                     skipDryRun: false
                     pruningEnabled: false
-            rollbackSteps:
               - step:
-                  name: Rollback Rollout Deployment
-                  identifier: rollbackRolloutDeployment
-                  type: K8sRollingRollback
+                  name: Swap primary with stage service
+                  identifier: bgSwapServices
+                  type: K8sBGSwapServices
                   timeout: 10m
                   spec:
-                    pruningEnabled: false
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Swap primary with stage service
+                  identifier: rollbackBgSwapServices
+                  type: K8sBGSwapServices
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
         tags: {}
         failureStrategies:
           - onFailure:
